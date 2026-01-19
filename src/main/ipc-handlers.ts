@@ -302,10 +302,11 @@ export function registerIpcHandlers(mainWindow: BrowserWindow): void {
     }
 
     const manager = new PhotoManager(config.getStoragePath());
-    const exportedPaths = await manager.exportSelected(project);
+    const result = await manager.exportSelected(project);
 
     return {
-      count: exportedPaths.length,
+      count: result.exported.length,
+      skipped: result.skipped,
       exportPath: manager.getExportsPath(project.name),
     };
   });

@@ -152,9 +152,13 @@ export default function ProjectView() {
 
   // Export selected
   const exportSelected = useMutation({
-    mutationFn: () => invoke<{ count: number; exportPath: string }>(IPC_CHANNELS.PHOTOS_EXPORT, projectId),
+    mutationFn: () => invoke<{ count: number; skipped: number; exportPath: string }>(IPC_CHANNELS.PHOTOS_EXPORT, projectId),
     onSuccess: (data) => {
-      alert(`Exported ${data.count} photos to:\n${data.exportPath}`);
+      let message = `Exported ${data.count} photos to:\n${data.exportPath}`;
+      if (data.skipped > 0) {
+        message += `\n\n${data.skipped} RAW/HEIC files were skipped (cannot be converted to JPEG).`;
+      }
+      alert(message);
     },
   });
 

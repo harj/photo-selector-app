@@ -131,7 +131,7 @@ export class PhotoManager {
     return { duplicate: false, photo };
   }
 
-  async exportSelected(project: Project): Promise<string[]> {
+  async exportSelected(project: Project): Promise<{ exported: string[]; skipped: number }> {
     const db = getDatabase();
     const photos = db.prepare(
       'SELECT * FROM photos WHERE project_id = ? AND selected = 1 ORDER BY score DESC, id'
@@ -152,10 +152,20 @@ export class PhotoManager {
 
     const exportedFiles: string[] = [];
     const sanitizedName = this.sanitizeName(project.name);
+    let skipped = 0;
+    let exportIndex = 1;
 
-    for (let i = 0; i < photos.length; i++) {
-      const photo = photos[i];
-      const exportFilename = `${sanitizedName}_${String(i + 1).padStart(2, '0')}.jpg`;
+    for (const photo of photos) {
+      const ext = path.extname(photo.original_filename).toLowerCase();
+
+      // Skip formats that sharp can't convert
+      if (SPECIAL_EXTENSIONS.includes(ext)) {
+        console.log(`Skipping ${photo.original_filename} - RAW/HEIC format cannot be exported as JPEG`);
+        skipped++;
+        continue;
+      }
+
+      const exportFilename = `${sanitizedName}_${String(exportIndex).padStart(2, '0')}.jpg`;
       const exportPath = path.join(exportsPath, exportFilename);
 
       try {
@@ -164,13 +174,14 @@ export class PhotoManager {
           .toFile(exportPath);
 
         exportedFiles.push(exportPath);
+        exportIndex++;
       } catch (error) {
         console.error(`Error exporting ${photo.original_filename}:`, error);
-        // Continue with other photos
+        skipped++;
       }
     }
 
-    return exportedFiles;
+    return { exported: exportedFiles, skipped };
   }
 
   async deleteProjectFiles(projectName: string): Promise<void> {

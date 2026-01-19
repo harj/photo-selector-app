@@ -16,14 +16,22 @@ AI-powered photo selection tool that helps you quickly cull through hundreds of 
 - **100% Local**: All photos stored on your computer - nothing uploaded to the cloud
 - **Secure**: API keys stored in your OS keychain
 
+## Download
+
+**[Download for macOS (Apple Silicon)](https://github.com/harj/photo-selector-app/releases/download/v1.0.0/Photo-Selector-macOS-AppleSilicon.dmg)** - M1/M2/M3 Macs
+
+**[Download for macOS (Intel)](https://github.com/harj/photo-selector-app/releases/download/v1.0.0/Photo-Selector-macOS-Intel.dmg)** - Older Intel Macs
+
+> **Note:** The app is not code-signed. On first launch, right-click the app and select "Open", then click "Open" again in the dialog to bypass Gatekeeper.
+
 ## Installation
 
-### From Release
+### From DMG
 
-Download the latest release for your platform:
-- **macOS**: Download the `.dmg` file, open it, and drag Photo Selector to Applications
-- **Windows**: Download the `.exe` installer and run it
-- **Linux**: Download the `.AppImage`, make it executable, and run it
+1. Download the appropriate `.dmg` file for your Mac (Apple Silicon or Intel)
+2. Open the DMG and drag Photo Selector to your Applications folder
+3. Right-click the app and select "Open" (required for first launch since app is unsigned)
+4. Click "Open" in the security dialog
 
 ### From Source
 

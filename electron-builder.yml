@@ -1,0 +1,71 @@
+appId: com.photoselector.app
+productName: Photo Selector
+copyright: Copyright 2024
+
+directories:
+  output: release
+  buildResources: resources
+
+files:
+  - dist/**/*
+  - package.json
+
+extraResources:
+  - from: resources/
+    to: resources/
+    filter:
+      - "**/*"
+
+mac:
+  category: public.app-category.photography
+  icon: resources/icon.icns
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+
+dmg:
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+
+win:
+  icon: resources/icon.ico
+  target:
+    - target: nsis
+      arch:
+        - x64
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+
+linux:
+  icon: resources/icon.png
+  category: Graphics
+  target:
+    - target: AppImage
+      arch:
+        - x64
+
+# Rebuild native modules for Electron
+npmRebuild: true
+nodeGypRebuild: false
+
+# Native modules need to be unpacked from asar
+asar: true
+asarUnpack:
+  - "**/*.node"
+  - "**/sharp/**/*"
+  - "**/better-sqlite3/**/*"
+  - "**/keytar/**/*"

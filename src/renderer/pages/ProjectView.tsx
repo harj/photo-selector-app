@@ -487,13 +487,19 @@ export default function ProjectView() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => {
+                    const photosToSelect = photos.filter(p => !selectedPhotos.has(p.id));
+                    if (photosToSelect.length === 0) return;
+
                     const newSelected = new Set(selectedPhotos);
-                    photos.forEach(p => newSelected.add(p.id));
+                    photosToSelect.forEach(p => newSelected.add(p.id));
                     setSelectedPhotos(newSelected);
-                    photos.forEach(p => {
-                      if (!selectedPhotos.has(p.id)) {
-                        invoke(IPC_CHANNELS.PHOTOS_UPDATE_SELECTION, { id: p.id, selected: true });
-                      }
+
+                    // Batch update in database
+                    invoke(IPC_CHANNELS.PHOTOS_UPDATE_SELECTION, {
+                      photoIds: photosToSelect.map(p => p.id),
+                      selected: true
+                    }).then(() => {
+                      queryClient.invalidateQueries({ queryKey: ['photos', projectId] });
                     });
                   }}
                   disabled={photos.length === 0}
@@ -510,11 +516,18 @@ export default function ProjectView() {
                   <button
                     onClick={() => {
                       const photosToDeselect = photos.filter(p => selectedPhotos.has(p.id));
+                      if (photosToDeselect.length === 0) return;
+
                       const newSelected = new Set(selectedPhotos);
                       photosToDeselect.forEach(p => newSelected.delete(p.id));
                       setSelectedPhotos(newSelected);
-                      photosToDeselect.forEach(p => {
-                        invoke(IPC_CHANNELS.PHOTOS_UPDATE_SELECTION, { id: p.id, selected: false });
+
+                      // Batch update in database
+                      invoke(IPC_CHANNELS.PHOTOS_UPDATE_SELECTION, {
+                        photoIds: photosToDeselect.map(p => p.id),
+                        selected: false
+                      }).then(() => {
+                        queryClient.invalidateQueries({ queryKey: ['photos', projectId] });
                       });
                     }}
                     className="inline-flex items-center gap-1.5 bg-gray-100 text-gray-600 hover:bg-gray-200 px-4 py-2 rounded-full text-sm font-medium transition-all"

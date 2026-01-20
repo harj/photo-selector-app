@@ -8,13 +8,13 @@ AI-powered photo selection tool that helps you quickly cull through hundreds of 
 
 > **Requires a Claude API key.** You'll need an [Anthropic developer account](https://console.anthropic.com/) to use the AI scoring features. Analysis costs approximately $0.01-0.02 per photo.
 
-![Photo Selector - AI-powered photo selection](screenshots/photo-grid.png)
+<img src="screenshots/photo-grid.png" alt="Photo Selector - AI-powered photo selection" width="700">
 
 ## Features
 
 - **Smart Photo Analysis**: Claude AI scores and comments on each photo based on composition, lighting, focus, and emotional impact
 
-![AI Analysis - detailed scoring and comments](screenshots/ai-analysis.png)
+<img src="screenshots/ai-analysis.png" alt="AI Analysis - detailed scoring and comments" width="500">
 
 - **Similarity Grouping**: Automatically groups similar photos (burst shots, duplicates) and shows only the best from each group
 - **Score Filtering**: Filter photos by score range and batch-select all filtered results
